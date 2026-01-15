@@ -1,0 +1,11 @@
+{
+  "name": "obsi",
+  "version": "1.0.0",
+  "description": "Capture notes to your Obsidian vault from anywhere. Say 'add this to obsi' in any project.",
+  "skills": "./skills/",
+  "author": {
+    "name": "Daniel Howells"
+  },
+  "license": "UNLICENSED",
+  "keywords": ["obsidian", "notes", "capture", "vault"]
+}

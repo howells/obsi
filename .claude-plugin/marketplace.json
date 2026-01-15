@@ -1,0 +1,23 @@
+{
+  "name": "howells-obsi",
+  "owner": {
+    "name": "Daniel Howells"
+  },
+  "metadata": {
+    "description": "Capture notes to Obsidian from anywhere",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "obsi",
+      "source": "./",
+      "description": "Capture notes to your Obsidian vault from anywhere in Claude Code",
+      "version": "1.0.0",
+      "author": {
+        "name": "Daniel Howells"
+      },
+      "license": "UNLICENSED",
+      "keywords": ["obsidian", "notes", "capture", "vault"]
+    }
+  ]
+}
