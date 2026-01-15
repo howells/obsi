@@ -1,6 +1,6 @@
 {
   "name": "obsi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Capture notes to your Obsidian vault from anywhere. Say 'add this to obsi' in any project.",
   "skills": "./skills/",
   "commands": "./commands/",
