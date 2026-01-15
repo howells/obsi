@@ -16,8 +16,9 @@
       "author": {
         "name": "Daniel Howells"
       },
-      "license": "UNLICENSED",
-      "keywords": ["obsidian", "notes", "capture", "vault"]
+      "repository": "https://github.com/howells/obsi",
+      "license": "MIT",
+      "keywords": ["obsidian", "notes", "capture", "vault", "pkm", "second-brain"]
     }
   ]
 }

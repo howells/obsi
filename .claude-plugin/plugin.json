@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Capture notes to your Obsidian vault from anywhere. Say 'add this to obsi' in any project.",
   "skills": "./skills/",
+  "commands": "./commands/",
   "author": {
     "name": "Daniel Howells"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": ["obsidian", "notes", "capture", "vault"]
 }

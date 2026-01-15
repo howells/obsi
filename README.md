@@ -1,25 +1,53 @@
 # obsi
 
-Claude Code plugin for capturing notes to your Obsidian vault from anywhere.
+Capture notes to your Obsidian vault from anywhere. Works with Claude Code and Cursor.
 
 ## Install
 
 ```bash
-claude plugins add ~/Sites/obsi
+npx obsi
+```
+
+That's it. Auto-detects your tools and sets up everything.
+
+### Manual alternatives
+
+**Claude Code:**
+```bash
+claude plugins add howells/obsi
+```
+
+**Cursor only:**
+```bash
+mkdir -p ~/.cursor/commands
+curl -o ~/.cursor/commands/obsi.md https://raw.githubusercontent.com/howells/obsi/main/commands/obsi.md
 ```
 
 ## Usage
 
-From any project:
+```
+/obsi Add a summary of this conversation
+/obsi Remember to refactor the auth module
+/obsi Save this error for debugging later
+```
 
+Or natural language (Claude Code):
 ```
 "add this to obsi"
 "save the api design to obsi"
-"put a reminder in obsi to review auth"
 ```
 
-Notes are created in `~/Obsi/Inbox/` with timestamps and context about where they came from.
+## What It Does
+
+Creates notes in `~/Obsi/Inbox/` with:
+- Timestamp filenames: `2026-01-15-183045 - auth-refactor.md`
+- YAML frontmatter: created, tags, source
+- Context about where the note came from
 
 ## Vault Location
 
-Expects your vault at `~/Obsi`. Edit `skills/capture/SKILL.md` to change.
+Expects `~/Obsi`. Edit the command file to customize.
+
+## License
+
+MIT

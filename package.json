@@ -1,0 +1,25 @@
+{
+  "name": "obsi",
+  "version": "1.0.0",
+  "description": "Capture notes to your Obsidian vault from Claude Code and Cursor",
+  "bin": {
+    "obsi": "./bin/cli.js"
+  },
+  "scripts": {
+    "postinstall": "node bin/cli.js --install"
+  },
+  "keywords": [
+    "obsidian",
+    "notes",
+    "capture",
+    "claude-code",
+    "cursor",
+    "ai-coding"
+  ],
+  "author": "Daniel Howells",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/howells/obsi.git"
+  }
+}
