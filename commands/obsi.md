@@ -4,7 +4,13 @@ description: Capture notes to your Obsidian vault. Usage: /obsi <what to capture
 
 # Capture to Obsidian
 
-Capture the provided content to the user's Obsidian vault at `~/Obsi/Inbox/`.
+Capture the provided content to the user's Obsidian vault.
+
+## Vault Path
+
+The vault path is defined by the `OBSIDIAN_VAULT` environment variable. If not set, default to `~/Obsi`.
+
+**Always use the env var value directly** — do not hardcode paths.
 
 ## Instructions
 
@@ -14,7 +20,7 @@ Capture the provided content to the user's Obsidian vault at `~/Obsi/Inbox/`.
 
 ## Create the Note
 
-Write to `~/Obsi/Inbox/YYYY-MM-DD-HHMMSS - <slug>.md`:
+Write to `$OBSIDIAN_VAULT/Inbox/YYYY-MM-DD-HHMMSS - <slug>.md`:
 
 ```markdown
 ---
@@ -30,7 +36,7 @@ source: <current project or context>
 
 ## Guidelines
 
-- Always save to `~/Obsi/Inbox/` — user files it later
+- Always save to `$OBSIDIAN_VAULT/Inbox/` — user files it later
 - Include source context (project, file, conversation)
 - Keep titles short (3-6 words)
 - Preserve content as-is unless summarization requested
@@ -38,7 +44,4 @@ source: <current project or context>
 
 ## Confirm
 
-After creating:
-```
-Created: ~/Obsi/Inbox/<filename>.md
-```
+After creating, confirm with the full file path.

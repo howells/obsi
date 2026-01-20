@@ -11,6 +11,7 @@ description: >
 Natural language trigger for the obsi command. When invoked, follow the instructions in `${CLAUDE_PLUGIN_ROOT}/commands/obsi.md`.
 
 Quick reference:
-- Save to `~/Obsi/Inbox/YYYY-MM-DD-HHMMSS - <slug>.md`
+- Vault path: `$OBSIDIAN_VAULT` env var (default: `~/Obsi`)
+- Save to: `$OBSIDIAN_VAULT/Inbox/YYYY-MM-DD-HHMMSS - <slug>.md`
 - Include YAML frontmatter: created, tags, source
 - Confirm with the file path after creating
