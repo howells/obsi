@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Box, Text, useInput, useApp} from 'ink';
 import {TextInput} from '@inkjs/ui';
 import * as obs from '../utils/obs.js';
-import {setPostExitCommand} from '../index.js';
+import {setPostExitCommand} from '../tui.js';
 
 interface Props {
   onBack: () => void;
