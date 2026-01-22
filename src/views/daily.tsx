@@ -8,11 +8,12 @@ interface Props {
 	onBack: () => void;
 }
 
-type Mode = "menu" | "amend" | "processing";
+type Mode = "menu" | "amend" | "processing" | "list";
 
 const menuItems = [
 	{ label: "Amend with Claude", key: "a" },
 	{ label: "View in Obsidian", key: "v" },
+	{ label: "All daily notes", key: "l" },
 	{ label: "Back", key: "escape" },
 ];
 
@@ -21,6 +22,8 @@ export default function Daily({ onBack }: Props) {
 	const [preview, setPreview] = useState("");
 	const [mode, setMode] = useState<Mode>("menu");
 	const [selected, setSelected] = useState(0);
+	const [dailyNotes, setDailyNotes] = useState<string[]>([]);
+	const [listSelected, setListSelected] = useState(0);
 
 	const dateStr = new Date().toISOString().split("T")[0];
 
@@ -79,6 +82,29 @@ Read the note, make the requested changes, and confirm what you did. Be concise.
 			return;
 		}
 
+		if (mode === "list") {
+			if (key.escape) {
+				setMode("menu");
+				return;
+			}
+			if (key.upArrow || input === "k") {
+				setListSelected((s) => Math.max(0, s - 1));
+				return;
+			}
+			if (key.downArrow || input === "j") {
+				setListSelected((s) => Math.min(dailyNotes.length - 1, s + 1));
+				return;
+			}
+			if (key.return) {
+				const selectedDate = dailyNotes[listSelected];
+				if (selectedDate) {
+					obs.open(`+Daily/${selectedDate}`);
+				}
+				return;
+			}
+			return;
+		}
+
 		if (key.escape) {
 			onBack();
 			return;
@@ -100,6 +126,7 @@ Read the note, make the requested changes, and confirm what you did. Be concise.
 
 		if (input === "v") handleAction("v");
 		if (input === "a") handleAction("a");
+		if (input === "l") handleAction("l");
 	});
 
 	const handleAction = (action: string) => {
@@ -107,6 +134,11 @@ Read the note, make the requested changes, and confirm what you did. Be concise.
 			obs.daily({ open: true });
 		} else if (action === "a") {
 			setMode("amend");
+		} else if (action === "l") {
+			const notes = obs.listDailyNotes();
+			setDailyNotes(notes);
+			setListSelected(0);
+			setMode("list");
 		} else if (action === "escape") {
 			onBack();
 		}
@@ -198,6 +230,28 @@ Read the note, make the requested changes, and confirm what you did. Be concise.
 						/>
 					</Box>
 					<Text dimColor>Enter to send · Esc cancel</Text>
+				</Box>
+			)}
+
+			{mode === "list" && (
+				<Box flexDirection="column" marginTop={1}>
+					<Text bold>All Daily Notes ({dailyNotes.length})</Text>
+					<Box flexDirection="column" marginTop={1}>
+						{dailyNotes.slice(0, 15).map((date, i) => (
+							<Box key={date}>
+								<Text color={i === listSelected ? "cyan" : undefined}>
+									{i === listSelected ? ">" : " "}
+								</Text>
+								<Text bold={i === listSelected}> {date}</Text>
+							</Box>
+						))}
+						{dailyNotes.length > 15 && (
+							<Text dimColor> ... {dailyNotes.length - 15} more</Text>
+						)}
+					</Box>
+					<Box marginTop={1}>
+						<Text dimColor>↑↓ navigate · Enter open · Esc back</Text>
+					</Box>
 				</Box>
 			)}
 		</Box>

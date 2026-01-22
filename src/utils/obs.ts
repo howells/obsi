@@ -290,7 +290,12 @@ export function copyPath(noteName: string): {
 	};
 }
 
-// Open note with system default app
+// Get vault name from path
+function getVaultName(): string {
+	return VAULT_PATH.split("/").pop() || "Obsi";
+}
+
+// Open note in Obsidian using URI scheme
 export function open(noteName: string): { success: boolean; error: string } {
 	const fullPath = resolvePath(noteName);
 
@@ -298,9 +303,20 @@ export function open(noteName: string): { success: boolean; error: string } {
 		return { success: false, error: `Note not found: ${noteName}` };
 	}
 
-	// Open with system default (macOS: open, Linux: xdg-open)
-	const cmd = process.platform === "darwin" ? "open" : "xdg-open";
-	const result = spawnSync(cmd, [fullPath], { encoding: "utf8" });
+	const stat = statSync(fullPath);
+	if (stat.isDirectory()) {
+		// For folders, open in Finder/file manager
+		const cmd = process.platform === "darwin" ? "open" : "xdg-open";
+		const result = spawnSync(cmd, [fullPath], { encoding: "utf8" });
+		return { success: result.status === 0, error: result.stderr?.trim() || "" };
+	}
+
+	// For files, use Obsidian URI scheme
+	const vaultName = getVaultName();
+	const relativePath = relative(VAULT_PATH, fullPath);
+	const obsidianUrl = `obsidian://open?vault=${encodeURIComponent(vaultName)}&file=${encodeURIComponent(relativePath)}`;
+
+	const result = spawnSync("open", [obsidianUrl], { encoding: "utf8" });
 	return { success: result.status === 0, error: result.stderr?.trim() || "" };
 }
 
@@ -361,6 +377,111 @@ tags: [daily]
 	}
 
 	return { success: true, path: dailyPath, error: "" };
+}
+
+// Get daily note path for a specific date
+export function getDailyPath(date: Date): string {
+	const dateStr = date.toISOString().split("T")[0];
+	return join(VAULT_PATH, "+Daily", `${dateStr}.md`);
+}
+
+// List all daily notes (sorted newest first)
+export function listDailyNotes(): string[] {
+	const dailyDir = join(VAULT_PATH, "+Daily");
+	if (!existsSync(dailyDir)) return [];
+
+	try {
+		const entries = readdirSync(dailyDir, { withFileTypes: true });
+		return entries
+			.filter((e) => e.isFile() && e.name.endsWith(".md"))
+			.map((e) => e.name.replace(".md", ""))
+			.filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name))
+			.sort((a, b) => b.localeCompare(a)); // Newest first
+	} catch {
+		return [];
+	}
+}
+
+// Ensure daily note exists for a specific date
+export function ensureDaily(date: Date): {
+	success: boolean;
+	path: string;
+	error: string;
+} {
+	const dateStr = date.toISOString().split("T")[0];
+	const dailyDir = join(VAULT_PATH, "+Daily");
+	const dailyPath = join(dailyDir, `${dateStr}.md`);
+
+	if (!existsSync(dailyDir)) {
+		mkdirSync(dailyDir, { recursive: true });
+	}
+
+	if (!existsSync(dailyPath)) {
+		const content = `---
+created: ${dateStr}
+tags: [daily]
+---
+
+# ${dateStr}
+
+## Tasks
+
+- [ ]
+
+## Notes
+
+`;
+		writeFileSync(dailyPath, content);
+	}
+
+	return { success: true, path: dailyPath, error: "" };
+}
+
+// Append a task to a daily note's Tasks section
+export function appendToDaily(
+	date: Date,
+	content: string,
+): { success: boolean; path: string; error: string } {
+	const result = ensureDaily(date);
+	if (!result.success) {
+		return result;
+	}
+
+	try {
+		const existing = readFileSync(result.path, "utf-8");
+
+		// Find the ## Tasks section and append there
+		const tasksMatch = existing.match(/^## Tasks\s*$/m);
+		let updated: string;
+
+		if (tasksMatch && tasksMatch.index !== undefined) {
+			// Find the end of the Tasks section (next ## or end of file)
+			const afterTasks = existing.slice(
+				tasksMatch.index + tasksMatch[0].length,
+			);
+			const nextSectionMatch = afterTasks.match(/^## /m);
+
+			if (nextSectionMatch && nextSectionMatch.index !== undefined) {
+				// Insert before the next section
+				const insertPos =
+					tasksMatch.index + tasksMatch[0].length + nextSectionMatch.index;
+				const before = existing.slice(0, insertPos).trimEnd();
+				const after = existing.slice(insertPos);
+				updated = `${before}\n- [ ] ${content}\n\n${after}`;
+			} else {
+				// No next section, append at end of file
+				updated = `${existing.trimEnd()}\n- [ ] ${content}\n`;
+			}
+		} else {
+			// No Tasks section, create one
+			updated = `${existing.trimEnd()}\n\n## Tasks\n\n- [ ] ${content}\n`;
+		}
+
+		writeFileSync(result.path, updated);
+		return { success: true, path: result.path, error: "" };
+	} catch (e) {
+		return { success: false, path: result.path, error: String(e) };
+	}
 }
 
 // Move/rename note (uses obs for link updating)
