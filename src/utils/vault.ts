@@ -32,12 +32,10 @@ export function getVaultPath(): string {
 export async function getVaultStats(): Promise<{
 	inbox: number;
 	total: number;
-	daily: boolean;
 }> {
 	const vaultPath = getVaultPath();
 	let inbox = 0;
 	let total = 0;
-	let daily = false;
 
 	try {
 		const inboxPath = path.join(vaultPath, "Inbox");
@@ -45,10 +43,6 @@ export async function getVaultStats(): Promise<{
 			const files = fs.readdirSync(inboxPath).filter((f) => f.endsWith(".md"));
 			inbox = files.length;
 		}
-
-		const today = new Date().toISOString().split("T")[0];
-		const dailyPath = path.join(vaultPath, "+Daily", `${today}.md`);
-		daily = fs.existsSync(dailyPath);
 
 		// Count total notes recursively
 		const countNotes = (dir: string): number => {
@@ -70,7 +64,7 @@ export async function getVaultStats(): Promise<{
 		// Ignore errors
 	}
 
-	return { inbox, total, daily };
+	return { inbox, total };
 }
 
 export interface Note {

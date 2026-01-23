@@ -6,7 +6,7 @@ export function createMockVault() {
 	const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "obsi-test-"));
 
 	// Create vault structure
-	const dirs = ["Inbox", "+Daily", "Projects", "Areas", "Resources"];
+	const dirs = ["Inbox", "Projects", "Areas", "Resources"];
 	dirs.forEach((dir) => {
 		fs.mkdirSync(path.join(tmpDir, dir), { recursive: true });
 	});
@@ -34,21 +34,6 @@ tags: [project]
 # My Project
 
 Project description here.`,
-		},
-		{
-			path: "+Daily/2026-01-16.md",
-			content: `---
-created: 2026-01-16
-tags: [daily]
----
-
-# Thursday, January 16, 2026
-
-## Tasks
-- [ ] Test the CLI
-
-## Notes
-Testing obsi CLI.`,
 		},
 	];
 

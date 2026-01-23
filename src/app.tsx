@@ -2,11 +2,10 @@ import { Box, useApp, useInput } from "ink";
 import { useState } from "react";
 import Browse from "./views/browse.js";
 import Capture from "./views/capture.js";
-import Daily from "./views/daily.js";
 import Help from "./views/help.js";
 import Home from "./views/home.js";
 
-export type View = "home" | "browse" | "daily" | "capture" | "help";
+export type View = "home" | "browse" | "capture" | "help";
 
 export default function App() {
 	const { exit } = useApp();
@@ -29,7 +28,6 @@ export default function App() {
 		<Box flexDirection="column" padding={1}>
 			{view === "home" && <Home onNavigate={setView} />}
 			{view === "browse" && <Browse onBack={() => setView("home")} />}
-			{view === "daily" && <Daily onBack={() => setView("home")} />}
 			{view === "capture" && <Capture onBack={() => setView("home")} />}
 			{view === "help" && <Help onBack={() => setView("home")} />}
 		</Box>

@@ -7,7 +7,6 @@ interface Props {
 const obsCommands = [
 	{ cmd: "obsi open <note>", desc: "Open in Obsidian" },
 	{ cmd: "obsi create <note>", desc: "Create new note" },
-	{ cmd: "obsi daily", desc: "Daily note" },
 	{ cmd: "obsi search <q>", desc: "Fuzzy search" },
 	{ cmd: "obsi search-content <q>", desc: "Search contents" },
 	{ cmd: "obsi print <note>", desc: "Print to terminal" },

@@ -10,7 +10,6 @@ interface Props {
 const menuItems = [
 	{ label: "Browse vault", value: "browse", key: "b" },
 	{ label: "Quick capture", value: "capture", key: "a" },
-	{ label: "Daily note", value: "daily", key: "d" },
 	{ label: "Help", value: "help", key: "?" },
 	{ label: "Quit", value: "quit", key: "q" },
 ];
